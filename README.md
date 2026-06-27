@@ -363,13 +363,14 @@ rm -rf ~/.codex/skills/gstack* 2>/dev/null
 rm -rf ~/.factory/skills/gstack* 2>/dev/null
 rm -rf ~/.kiro/skills/gstack* 2>/dev/null
 rm -rf ~/.openclaw/skills/gstack* 2>/dev/null
+rm -rf ~/.pi/agent/skills/gstack* 2>/dev/null
 
 # 6. Remove temp files
 rm -f /tmp/gstack-* 2>/dev/null
 
 # 7. Per-project cleanup (run from each project root)
 rm -rf .gstack .gstack-worktrees .claude/skills/gstack 2>/dev/null
-rm -rf .agents/skills/gstack* .factory/skills/gstack* 2>/dev/null
+rm -rf .agents/skills/gstack* .factory/skills/gstack* .pi/skills/gstack* 2>/dev/null
 ```
 
 ### Clean up CLAUDE.md
