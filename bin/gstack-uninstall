@@ -66,6 +66,7 @@ if [ "$FORCE" -eq 0 ]; then
   [ -d "$HOME/.codex/skills" ] && echo "  ~/.codex/skills/gstack*"
   [ -d "$HOME/.factory/skills" ] && echo "  ~/.factory/skills/gstack*"
   [ -d "$HOME/.kiro/skills" ] && echo "  ~/.kiro/skills/gstack*"
+  [ -d "$HOME/.pi/agent/skills" ] && echo "  ~/.pi/agent/skills/gstack*"
   [ "$KEEP_STATE" -eq 0 ] && [ -d "$STATE_DIR" ] && echo "  $STATE_DIR"
 
   if [ -n "$_GIT_ROOT" ]; then
@@ -73,6 +74,7 @@ if [ "$FORCE" -eq 0 ]; then
     [ -d "$_GIT_ROOT/.gstack" ] && echo "  $_GIT_ROOT/.gstack/ (browse state + reports)"
     [ -d "$_GIT_ROOT/.gstack-worktrees" ] && echo "  $_GIT_ROOT/.gstack-worktrees/"
     [ -d "$_GIT_ROOT/.agents/skills" ] && echo "  $_GIT_ROOT/.agents/skills/gstack*"
+    [ -d "$_GIT_ROOT/.pi/skills" ] && echo "  $_GIT_ROOT/.pi/skills/gstack*"
   fi
 
   # Preview running daemons
@@ -201,6 +203,28 @@ if [ -n "$_GIT_ROOT" ] && [ -d "$_GIT_ROOT/.agents/skills" ]; then
 
   rmdir "$_GIT_ROOT/.agents/skills" 2>/dev/null || true
   rmdir "$_GIT_ROOT/.agents" 2>/dev/null || true
+fi
+
+# ─── Remove Pi skills ───────────────────────────────────────
+PI_SKILLS="$HOME/.pi/agent/skills"
+if [ -d "$PI_SKILLS" ]; then
+  for _ITEM in "$PI_SKILLS"/gstack*; do
+    [ -e "$_ITEM" ] || [ -L "$_ITEM" ] || continue
+    rm -rf "$_ITEM"
+    REMOVED+=("pi/$(basename "$_ITEM")")
+  done
+fi
+
+# ─── Remove per-project .pi/ sidecar ────────────────────
+if [ -n "$_GIT_ROOT" ] && [ -d "$_GIT_ROOT/.pi/skills" ]; then
+  for _ITEM in "$_GIT_ROOT/.pi/skills"/gstack*; do
+    [ -e "$_ITEM" ] || [ -L "$_ITEM" ] || continue
+    rm -rf "$_ITEM"
+    REMOVED+=("pi/$(basename "$_ITEM")")
+  done
+
+  rmdir "$_GIT_ROOT/.pi/skills" 2>/dev/null || true
+  rmdir "$_GIT_ROOT/.pi" 2>/dev/null || true
 fi
 
 # ─── Remove per-project .factory/ sidecar ────────────────────
