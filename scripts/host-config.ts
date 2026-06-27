@@ -94,7 +94,7 @@ export interface HostConfig {
     /** Whether gstack-config skill_prefix applies (Claude only). */
     prefixable: boolean;
     /** How skills are linked into the host dir. */
-    linkingStrategy: 'real-dir-symlink' | 'symlink-generated';
+    linkingStrategy: 'real-dir-symlink' | 'symlink-generated' | 'copy';
   };
 
   // --- Host-Specific Behavioral Config ---
@@ -148,8 +148,8 @@ export function validateHostConfig(config: HostConfig): string[] {
   if (!['allowlist', 'denylist'].includes(config.frontmatter.mode)) {
     errors.push(`frontmatter.mode must be 'allowlist' or 'denylist'`);
   }
-  if (!['real-dir-symlink', 'symlink-generated'].includes(config.install.linkingStrategy)) {
-    errors.push(`install.linkingStrategy must be 'real-dir-symlink' or 'symlink-generated'`);
+  if (!['real-dir-symlink', 'symlink-generated', 'copy'].includes(config.install.linkingStrategy)) {
+    errors.push(`install.linkingStrategy must be 'real-dir-symlink', 'symlink-generated', or 'copy'`);
   }
 
   return errors;

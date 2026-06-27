@@ -77,7 +77,7 @@ const pi: HostConfig = {
 
   install: {
     prefixable: false,
-    linkingStrategy: 'symlink-generated',
+    linkingStrategy: 'copy',
   },
 
   coAuthorTrailer: 'Co-Authored-By: Pi Agent <agent@pi.dev>',
