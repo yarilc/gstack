@@ -993,36 +993,33 @@ create_pi_runtime_root() {
   local pi_gstack="$2"
   local pi_dir="$gstack_dir/.pi/skills"
 
-  if [ -L "$pi_gstack" ]; then
-    rm -f "$pi_gstack"
-  elif [ -d "$pi_gstack" ] && [ "$pi_gstack" != "$gstack_dir" ]; then
-    rm -rf "$pi_gstack"
-  fi
-
+  # Use real copies (not symlinks) so Pi works from a container
+  # without requiring the gstack repo to be mounted.
+  rm -rf "$pi_gstack"
   mkdir -p "$pi_gstack" "$pi_gstack/browse" "$pi_gstack/gstack-upgrade" "$pi_gstack/review"
 
   if [ -f "$pi_dir/gstack/SKILL.md" ]; then
-    _link_or_copy "$pi_dir/gstack/SKILL.md" "$pi_gstack/SKILL.md"
+    cp -f "$pi_dir/gstack/SKILL.md" "$pi_gstack/SKILL.md"
   fi
   if [ -d "$gstack_dir/bin" ]; then
-    _link_or_copy "$gstack_dir/bin" "$pi_gstack/bin"
+    cp -R "$gstack_dir/bin" "$pi_gstack/bin"
   fi
   if [ -d "$gstack_dir/browse/dist" ]; then
-    _link_or_copy "$gstack_dir/browse/dist" "$pi_gstack/browse/dist"
+    cp -R "$gstack_dir/browse/dist" "$pi_gstack/browse/dist"
   fi
   if [ -d "$gstack_dir/browse/bin" ]; then
-    _link_or_copy "$gstack_dir/browse/bin" "$pi_gstack/browse/bin"
+    cp -R "$gstack_dir/browse/bin" "$pi_gstack/browse/bin"
   fi
   if [ -f "$pi_dir/gstack-upgrade/SKILL.md" ]; then
-    _link_or_copy "$pi_dir/gstack-upgrade/SKILL.md" "$pi_gstack/gstack-upgrade/SKILL.md"
+    cp -f "$pi_dir/gstack-upgrade/SKILL.md" "$pi_gstack/gstack-upgrade/SKILL.md"
   fi
   for f in checklist.md design-checklist.md greptile-triage.md TODOS-format.md; do
     if [ -f "$gstack_dir/review/$f" ]; then
-      _link_or_copy "$gstack_dir/review/$f" "$pi_gstack/review/$f"
+      cp -f "$gstack_dir/review/$f" "$pi_gstack/review/$f"
     fi
   done
   if [ -f "$gstack_dir/ETHOS.md" ]; then
-    _link_or_copy "$gstack_dir/ETHOS.md" "$pi_gstack/ETHOS.md"
+    cp -f "$gstack_dir/ETHOS.md" "$pi_gstack/ETHOS.md"
   fi
 }
 
@@ -1042,15 +1039,16 @@ link_pi_skill_dirs() {
     return 1
   fi
 
+  # Use real copies (not symlinks) so all gstack-* skills are
+  # self-contained inside ~/.pi/agent/skills/ for container use.
   for skill_dir in "$pi_dir"/gstack*/; do
     if [ -f "$skill_dir/SKILL.md" ]; then
       skill_name="$(basename "$skill_dir")"
       [ "$skill_name" = "gstack" ] && continue
       target="$skills_dir/$skill_name"
-      if [ -L "$target" ] || [ ! -e "$target" ]; then
-        _link_or_copy "$skill_dir" "$target"
-        linked+=("$skill_name")
-      fi
+      rm -rf "$target"
+      cp -R "$skill_dir" "$target"
+      linked+=("$skill_name")
     fi
   done
   if [ ${#linked[@]} -gt 0 ]; then
