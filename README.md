@@ -42,7 +42,7 @@ Fork it. Improve it. Make it yours. And if you want to hate on free open source 
 
 ## Install — 30 seconds
 
-**Requirements:** [Claude Code](https://docs.anthropic.com/en/docs/claude-code), [Git](https://git-scm.com/), [Bun](https://bun.sh/) v1.0+, [Node.js](https://nodejs.org/) (Windows only)
+**Requirements:** One of [Claude Code](https://docs.anthropic.com/en/docs/claude-code) or [Pi](https://pi.dev), [Git](https://git-scm.com/), [Bun](https://bun.sh/) v1.0+, [Node.js](https://nodejs.org/) (Windows only)
 
 ### Step 1: Install on your machine
 
@@ -101,7 +101,7 @@ These are conversational skills. Your OpenClaw agent runs them directly via chat
 
 ### Other AI Agents
 
-gstack works on 10 AI coding agents, not just Claude. Setup auto-detects which
+gstack works on 11 AI coding agents, not just Claude. Setup auto-detects which
 agents you have installed:
 
 ```bash
@@ -122,6 +122,8 @@ Or target a specific agent with `./setup --host <name>`:
 | Hermes | `--host hermes` | `~/.hermes/skills/gstack-*/` |
 | GBrain (mod) | `--host gbrain` | `~/.gbrain/skills/gstack-*/` |
 | Pi | `--host pi` | `~/.pi/agent/skills/gstack-*/` |
+
+> **Pi note:** gstack installs real copies (not symlinks) into `~/.pi/agent/skills/` so everything is self-contained. This means Pi works from a container without requiring the gstack repo to be mounted there. After `git pull`, re-run `./setup --host pi` to refresh the copies.
 
 **Want to add support for another agent?** See [docs/ADDING_A_HOST.md](docs/ADDING_A_HOST.md).
 It's one TypeScript config file, zero code changes.
