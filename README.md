@@ -124,6 +124,13 @@ Or target a specific agent with `./setup --host <name>`:
 | Pi | `--host pi` | `~/.pi/agent/skills/gstack-*/` |
 
 > **Pi note:** gstack installs real copies (not symlinks) into `~/.pi/agent/skills/` so everything is self-contained. This means Pi works from a container without requiring the gstack repo to be mounted there. After `git pull`, re-run `./setup --host pi` to refresh the copies.
+>
+> **Troubleshooting Pi setup:**
+> - **`bun: command not found`** — gstack requires [Bun](https://bun.sh/) v1.0+. Install it:
+>   `curl -fsSL https://bun.sh/install | bash`
+> - **`Playwright Chromium could not be launched`** — On Linux/WSL, Chromium may need system libraries:
+>   `npx playwright install-deps chromium`
+>   Then re-run `./setup --host pi`.
 
 **Want to add support for another agent?** See [docs/ADDING_A_HOST.md](docs/ADDING_A_HOST.md).
 It's one TypeScript config file, zero code changes.
@@ -469,6 +476,14 @@ Data is stored in [Supabase](https://supabase.com) (open source Firebase alterna
 **Want shorter commands?** `cd ~/.claude/skills/gstack && ./setup --no-prefix` — switches from `/gstack-qa` to `/qa`. Your choice is remembered for future upgrades.
 
 **Want namespaced commands?** `cd ~/.claude/skills/gstack && ./setup --prefix` — switches from `/qa` to `/gstack-qa`. Useful if you run other skill packs alongside gstack.
+
+**`./setup` fails with "Playwright Chromium could not be launched"?**
+- **Missing Bun.** gstack uses Bun to launch Playwright. If `bun --version` fails, install Bun:
+  `curl -fsSL https://bun.sh/install | bash`
+- **Missing system dependencies (WSL/Linux).** Chromium requires libraries like `libnss3`, `libatk-1.0-0`, etc.
+  Run: `npx playwright install-deps chromium` — or install manually:
+  `sudo apt-get install -y libnss3 libnspr4 libatk1.0-0 libatk-bridge2.0-0 libcups2 libdrm2 libdbus-1-3 libxkbcommon0 libxcomposite1 libxdamage1 libxrandr2 libgbm1 libpango-1.0-0 libcairo2 libasound2`
+  Then re-run `./setup --host <name>`.
 
 **Codex says "Skipped loading skill(s) due to invalid SKILL.md"?** Your Codex skill descriptions are stale. Fix: `cd ~/.codex/skills/gstack && git pull && ./setup --host codex` — or for repo-local installs: `cd "$(readlink -f .agents/skills/gstack)" && git pull && ./setup --host codex`
 
