@@ -78,6 +78,7 @@ const pi: HostConfig = {
   install: {
     prefixable: false,
     linkingStrategy: 'copy',
+    namePrefix: 'gstack-',
   },
 
   coAuthorTrailer: 'Co-Authored-By: Pi Agent <agent@pi.dev>',

@@ -95,6 +95,13 @@ export interface HostConfig {
     prefixable: boolean;
     /** How skills are linked into the host dir. */
     linkingStrategy: 'real-dir-symlink' | 'symlink-generated' | 'copy';
+    /**
+     * Optional prefix for the `name:` field in generated SKILL.md frontmatter.
+     * E.g., 'gstack-' produces name: gstack-qa instead of name: qa, making Pi
+     * register the skill as /skill:gstack-qa.
+     * Not applied to the root gstack skill.
+     */
+    namePrefix?: string;
   };
 
   // --- Host-Specific Behavioral Config ---

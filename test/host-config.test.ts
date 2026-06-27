@@ -430,9 +430,22 @@ describe('host config correctness', () => {
     for (const config of ALL_HOST_CONFIGS) {
       if (config.name === 'claude') {
         expect(config.install.linkingStrategy).toBe('real-dir-symlink');
+      } else if (config.name === 'pi') {
+        expect(config.install.linkingStrategy).toBe('copy');
       } else {
         expect(config.install.linkingStrategy).toBe('symlink-generated');
       }
+    }
+  });
+
+  test('pi has gstack- namePrefix for frontmatter', () => {
+    expect(pi.install.namePrefix).toBe('gstack-');
+  });
+
+  test('no other host has namePrefix', () => {
+    for (const config of ALL_HOST_CONFIGS) {
+      if (config.name === 'pi') continue;
+      expect(config.install.namePrefix).toBeUndefined();
     }
   });
 

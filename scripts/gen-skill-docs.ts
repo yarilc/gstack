@@ -507,7 +507,7 @@ policy:
  * Codex: keeps name + description only, enforces 1024-char limit.
  * Factory: keeps name + description + user-invocable, conditionally adds disable-model-invocation.
  */
-function transformFrontmatter(content: string, host: Host): string {
+function transformFrontmatter(content: string, host: Host, nameOverride?: string): string {
   const hostConfig = getHostConfig(host);
   const fm = hostConfig.frontmatter;
 
@@ -530,7 +530,8 @@ function transformFrontmatter(content: string, host: Host): string {
   if (fmEnd === -1) return content;
   const frontmatter = content.slice(fmStart + 4, fmEnd);
   const body = content.slice(fmEnd + 4);
-  const { name, description } = extractNameAndDescription(content);
+  const { name: extractedName, description } = extractNameAndDescription(content);
+  const name = nameOverride ?? extractedName;
 
   // Description limit enforcement
   if (fm.descriptionLimit) {
@@ -771,8 +772,15 @@ function processExternalHost(
   // Extract hook safety prose BEFORE transforming frontmatter (which strips hooks)
   const safetyProse = extractHookSafetyProse(tmplContent);
 
+  // Compute frontmatter name override for hosts that require a name prefix
+  // (e.g., Pi: name: qa → name: gstack-qa). The root skill keeps its name.
+  const namePrefix = hostConfig.install?.namePrefix;
+  const fmNameOverride = namePrefix && skillDir !== '.' && skillDir !== ''
+    ? name   // name already includes prefix from externalSkillName (e.g., "gstack-qa")
+    : undefined;
+
   // Transform frontmatter (host-aware)
-  let result = transformFrontmatter(content, host);
+  let result = transformFrontmatter(content, host, fmNameOverride);
 
   // Insert safety advisory at the top of the body (after frontmatter)
   if (safetyProse) {
