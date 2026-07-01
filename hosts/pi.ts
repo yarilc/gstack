@@ -82,6 +82,7 @@ const pi: HostConfig = {
     'the Write tool': 'the write tool',
     'the Edit tool': 'the edit tool',
     'the Grep tool': 'the grep tool',
+    'the Glob tool': 'the find tool',
   },
 
   suppressedResolvers: [
