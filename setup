@@ -1345,8 +1345,11 @@ if [ "$TEAM_MODE" -eq 1 ]; then
   "$GSTACK_CONFIG" set auto_upgrade true 2>/dev/null || true
   "$GSTACK_CONFIG" set team_mode true 2>/dev/null || true
 
-  # Register SessionStart hook in Claude Code settings
-  if [ -x "$SETTINGS_HOOK" ]; then
+  # Register SessionStart hook in Claude Code settings.
+  # Skip when Pi is the sole target host: the hook writes to
+  # ~/.claude/settings.json which Pi does not read, and Pi has no
+  # equivalent hook system. Silent skip — no user-facing message.
+  if [ -x "$SETTINGS_HOOK" ] && [ "$INSTALL_CLAUDE" -eq 1 -o "$INSTALL_PI" -eq 0 ]; then
     "$SETTINGS_HOOK" add "$HOOK_CMD" 2>/dev/null || true
   fi
 
@@ -1439,6 +1442,7 @@ AUQ_ERROR_FALLBACK_HOOK="$SOURCE_GSTACK_DIR/hosts/claude/hooks/auq-error-fallbac
 PLAN_TUNE_INSTALL_MARKER="$HOME/.gstack/.plan-tune-hooks-prompted"
 
 if [ "$NO_TEAM_MODE" -ne 1 ] \
+   && [ "$INSTALL_CLAUDE" -eq 1 -o "$INSTALL_PI" -eq 0 ] \
    && [ -x "$SETTINGS_HOOK" ] \
    && [ -x "$PLAN_TUNE_LOG_HOOK" ] \
    && [ -x "$PLAN_TUNE_PREF_HOOK" ]; then
