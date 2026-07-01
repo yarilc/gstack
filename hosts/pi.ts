@@ -6,7 +6,7 @@ import type { HostConfig } from '../scripts/host-config';
  * a specific provider/model/thinking level per dispatch.
  */
 const MODEL_DIRECTIVE =
-  ' (if the user specifies a model, use `--provider`, `--thinking` and `--model` accordingly)';
+  ' (use 3600s timeout, if the user specifies a model, use `--provider`, `--thinking` and `--model` accordingly)';
 
 const pi: HostConfig = {
   name: 'pi',
