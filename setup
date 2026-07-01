@@ -1349,7 +1349,7 @@ if [ "$TEAM_MODE" -eq 1 ]; then
   # Skip when Pi is the sole target host: the hook writes to
   # ~/.claude/settings.json which Pi does not read, and Pi has no
   # equivalent hook system. Silent skip — no user-facing message.
-  if [ -x "$SETTINGS_HOOK" ] && [ "$INSTALL_CLAUDE" -eq 1 -o "$INSTALL_PI" -eq 0 ]; then
+  if [ -x "$SETTINGS_HOOK" ] && { [ "$INSTALL_CLAUDE" -eq 1 ] || [ "$INSTALL_PI" -eq 0 ]; }; then
     "$SETTINGS_HOOK" add "$HOOK_CMD" 2>/dev/null || true
   fi
 
@@ -1442,7 +1442,7 @@ AUQ_ERROR_FALLBACK_HOOK="$SOURCE_GSTACK_DIR/hosts/claude/hooks/auq-error-fallbac
 PLAN_TUNE_INSTALL_MARKER="$HOME/.gstack/.plan-tune-hooks-prompted"
 
 if [ "$NO_TEAM_MODE" -ne 1 ] \
-   && [ "$INSTALL_CLAUDE" -eq 1 -o "$INSTALL_PI" -eq 0 ] \
+   && { [ "$INSTALL_CLAUDE" -eq 1 ] || [ "$INSTALL_PI" -eq 0 ]; } \
    && [ -x "$SETTINGS_HOOK" ] \
    && [ -x "$PLAN_TUNE_LOG_HOOK" ] \
    && [ -x "$PLAN_TUNE_PREF_HOOK" ]; then
